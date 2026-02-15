@@ -49,15 +49,15 @@ class GameState:
                 self.addRandomShape()
     
     def isAtBottom(self):
-        foundOne = False
-        for i in range(len(self.currentShape.matrix) - 1, -1, -1):
-            for j in range(len(self.currentShape.matrix[0])):
+        for j in range(len(self.currentShape.matrix[0])):
+            for i in range(len(self.currentShape.matrix) - 1, -1, -1):
                 if self.currentShape.matrix[i][j] != Cell.Empty:
-                    foundOne = True
                     if self.currentShape.y + i + 1 >= self.HEIGHT or self.gameGrid[self.currentShape.y + i + 1][self.currentShape.x + j] != Cell.Empty:
                         return True
-            if foundOne: 
-                return False
-                
+                    break
+        return False
+    # def BoardFull(self):
+    #     for i in range(len(self.currentShape.matrix)):
+    #         for j in range(len(self.currentShape.matrix[0])):
+    #             if self.
 
-                
