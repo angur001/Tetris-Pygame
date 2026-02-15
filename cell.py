@@ -19,6 +19,6 @@ class Cell(Enum):
         elif self == Cell.Green:
             return (0, 255, 0)
         elif self == Cell.Yellow:
-            return (255, 255, 0)
+            return (125, 125, 0)
         elif self == Cell.Purple:
             return (255, 0, 255)
