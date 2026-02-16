@@ -45,9 +45,12 @@ pygame.display.set_caption("Tetris")
 
 SHAPE_FALL_EVENT = pygame.USEREVENT + 1 ## custom id that's supposed to be unique
 pygame.time.set_timer(SHAPE_FALL_EVENT, game.getGameSpeed())
+SOFT_DROP_SPEED = 25
+last_soft_drop_time = pygame.time.get_ticks()
 
 running = True
 while running:
+    current_time = pygame.time.get_ticks()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -57,9 +60,15 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 game.tryMoveLeft()
-                
             if event.key == pygame.K_RIGHT:
                 game.tryMoveRight()
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_DOWN]:
+        if current_time - last_soft_drop_time > SOFT_DROP_SPEED:
+            game.step()
+            last_soft_drop_time = current_time
+
 
     screen.fill((255, 255, 255))
     drawFrame(screen, game)
