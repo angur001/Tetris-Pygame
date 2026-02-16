@@ -56,10 +56,10 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                game.moveShapeLeft()
+                game.tryMoveLeft()
                 
             if event.key == pygame.K_RIGHT:
-                game.moveShapeRight()
+                game.tryMoveRight()
 
     screen.fill((255, 255, 255))
     drawFrame(screen, game)

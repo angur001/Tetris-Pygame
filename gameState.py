@@ -57,34 +57,34 @@ class GameState:
                     break
         return False
 
-    def isAtLeft(self):
+    def canMoveLeft(self):
         for i in range(len(self.currentShape.matrix)):
             for j in range(len(self.currentShape.matrix[0])):
                 if self.currentShape.matrix[i][j] != Cell.Empty:
-                    if self.currentShape.x + j - 1 < 0:
-                        return True
+                    if self.currentShape.x + j - 1 < 0 or self.gameGrid[self.currentShape.y + i][self.currentShape.x + j - 1] != Cell.Empty:
+                        return False
                     break
-        return False
+        return True
 
-    def isAtRight(self):
+    def canMoveRight(self):
         for i in range(len(self.currentShape.matrix)):
             for j in range(len(self.currentShape.matrix[0])-1,-1,-1):
                 if self.currentShape.matrix[i][j] != Cell.Empty:
-                    if self.currentShape.x + j + 1 >= self.WIDTH:
-                        return True
+                    if self.currentShape.x + j + 1 >= self.WIDTH or self.gameGrid[self.currentShape.y + i][self.currentShape.x + j + 1] != Cell.Empty:
+                        return False
                     break
-        return False
+        return True
                 
-    def moveShapeLeft(self):
+    def tryMoveLeft(self):
         if self.currentShape:
-            if not self.isAtLeft():
+            if self.canMoveLeft():
                 self.removeShadow()
                 self.currentShape.x -= 1
                 self.updateGameGrid()
     
-    def moveShapeRight(self):
+    def tryMoveRight(self):
         if self.currentShape:
-            if not self.isAtRight():
+            if self.canMoveRight():
                 self.removeShadow()
                 self.currentShape.x += 1
                 self.updateGameGrid()
