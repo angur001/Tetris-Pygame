@@ -51,8 +51,15 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == SHAPE_FALL_EVENT:
+        if event.type == SHAPE_FALL_EVENT:
             game.step()
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                game.moveShapeLeft()
+                
+            if event.key == pygame.K_RIGHT:
+                game.moveShapeRight()
 
     screen.fill((255, 255, 255))
     drawFrame(screen, game)

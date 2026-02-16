@@ -56,8 +56,36 @@ class GameState:
                         return True
                     break
         return False
-    # def BoardFull(self):
-    #     for i in range(len(self.currentShape.matrix)):
-    #         for j in range(len(self.currentShape.matrix[0])):
-    #             if self.
 
+    def isAtLeft(self):
+        for i in range(len(self.currentShape.matrix)):
+            for j in range(len(self.currentShape.matrix[0])):
+                if self.currentShape.matrix[i][j] != Cell.Empty:
+                    if self.currentShape.x + j - 1 < 0:
+                        return True
+                    break
+        return False
+
+    def isAtRight(self):
+        for i in range(len(self.currentShape.matrix)):
+            for j in range(len(self.currentShape.matrix[0])-1,-1,-1):
+                if self.currentShape.matrix[i][j] != Cell.Empty:
+                    if self.currentShape.x + j + 1 >= self.WIDTH:
+                        return True
+                    break
+        return False
+                
+    def moveShapeLeft(self):
+        if self.currentShape:
+            if not self.isAtLeft():
+                self.removeShadow()
+                self.currentShape.x -= 1
+                self.updateGameGrid()
+    
+    def moveShapeRight(self):
+        if self.currentShape:
+            if not self.isAtRight():
+                self.removeShadow()
+                self.currentShape.x += 1
+                self.updateGameGrid()
+    
