@@ -1,35 +1,12 @@
 import pygame
-from cell import Cell
 from gameState import GameState
-
-
-CELL_SIZE = 20
-GRID_WIDTH_PX = 10 * CELL_SIZE  # 200px
-GRID_HEIGHT_PX = 20 * CELL_SIZE # 400px
-
-SCREEN_W, SCREEN_H = 400, 500
-
-X_OFFSET = (SCREEN_W - GRID_WIDTH_PX) // 2
-Y_OFFSET = (SCREEN_H - GRID_HEIGHT_PX) // 2
-
-def drawFrame(screen, game):
-    for i in range(game.HEIGHT):
-        for j in range(game.WIDTH):
-            # calculate position of the cell
-            rect_x = X_OFFSET + (j * CELL_SIZE)
-            rect_y = Y_OFFSET + (i * CELL_SIZE)
-            
-            color = Cell.getColorValue(game.gameGrid[i][j])
-            pygame.draw.rect(screen, color, (rect_x, rect_y, CELL_SIZE, CELL_SIZE))
-            
-            # outline trick
-            pygame.draw.rect(screen, (0, 0, 0), (rect_x, rect_y, CELL_SIZE, CELL_SIZE), 1)
+from displays import Displays
 
 pygame.init()
+displays = Displays()
 game = GameState()
-screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
+screen = pygame.display.set_mode((Displays.SCREEN_W, Displays.SCREEN_H))
 pygame.display.set_caption("Tetris")
-
 ## genera documentation
 ## game state will be a 2d array of 10x20
 ## game state will also include score and some variable that will be used to control the game speed
@@ -71,7 +48,8 @@ while running:
 
 
     screen.fill((255, 255, 255))
-    drawFrame(screen, game)
+    displays.drawFrame(screen, game)
+    if game.gameOver():
+        displays.DisplayGameOver(screen, game.score)
     pygame.display.flip()
-
 pygame.quit()
