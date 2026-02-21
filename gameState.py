@@ -27,7 +27,7 @@ class GameState:
         return self.gameSpeed
         
     def addRandomShape(self):
-        newShape = Shape.generateRandomShape(Shape, self.WIDTH // 2 - 1, -4)
+        newShape = Shape.generateRandomShape(self.WIDTH // 2 - 1, -4)
         self.currentShape = newShape
         self.updateGameGrid()
 
