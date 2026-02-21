@@ -9,49 +9,50 @@ class Shape:
     ## coordinates of the top left corner of the shape in the game grid
     x: int
     y: int
+    rotation_index: int
 
     SHAPES = {
         'I': [
-            [0, 0, 0, 0],
-            [1, 1, 1, 1],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
+            [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]],
+            [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]],
+            [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]]
         ],
         'J': [
-            [1, 0, 0, 0],
-            [1, 1, 1, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
+            [[1, 0, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
+            [[0, 0, 0, 0], [1, 1, 1, 0], [0, 0, 1, 0], [0, 0, 0, 0]],
+            [[0, 1, 0, 0], [0, 1, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0]]
         ],
         'L': [
-            [0, 0, 1, 0],
-            [1, 1, 1, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
+            [[0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0]],
+            [[0, 0, 0, 0], [1, 1, 1, 0], [1, 0, 0, 0], [0, 0, 0, 0]],
+            [[1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]]
         ],
         'O': [
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
+            [[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
         ],
         'S': [
-            [0, 1, 1, 0],
-            [1, 1, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
+            [[0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 0, 0]],
+            [[0, 0, 0, 0], [0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0]],
+            [[1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]]
         ],
         'T': [
-            [0, 1, 0, 0],
-            [1, 1, 1, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
+            [[0, 1, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 0, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
+            [[0, 0, 0, 0], [1, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
+            [[0, 1, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]]
         ],
         'Z': [
-            [1, 1, 0, 0],
-            [0, 1, 1, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
+            [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            [[0, 0, 1, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
+            [[0, 0, 0, 0], [1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0]],
+            [[0, 1, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0]]
         ]
     }
 
@@ -61,16 +62,28 @@ class Shape:
         self.y = y
         self.color = color
         self.name = name
+        self.rotation_index = 0
+
+    def mapRawMatrixToColor(self, matrix: list[list[Cell]]):
+        return [[Cell.Empty if matrix[i][j] == 0 else self.color for j in range(len(matrix[0]))] for i in range(len(matrix))]
+
+    def peekAtNextRotation(self):
+        next_rotation_index = (self.rotation_index + 1) % 4
+        temp = Shape.SHAPES[self.name][next_rotation_index]
+        return Shape(self.mapRawMatrixToColor(temp), self.x, self.y, self.color, self.name)
+    
+    def rotate(self):
+        self.rotation_index = (self.rotation_index + 1) % 4
+        temp = Shape.SHAPES[self.name][self.rotation_index]
+        self.matrix = self.mapRawMatrixToColor(temp)
 
     @staticmethod
-    def generateRandomShape(self, x:int, y:int):
-        self.x = x
-        self.y = y
-        randomColor = random.choice([Cell.Red, Cell.Blue, Cell.Green, Cell.Yellow, Cell.Purple])
-        self.color = randomColor
-        self.name = random.choice(list(self.SHAPES.keys()))
-        temp = self.SHAPES[self.name]
-        self.matrix = [[Cell.Empty if temp[i][j] == 0 else randomColor for j in range(len(temp[0]))] for i in range(len(temp))]
-        return self
+    def generateRandomShape(x: int, y: int):
+        name = random.choice(list(Shape.SHAPES.keys()))
+        color = random.choice([Cell.Red, Cell.Blue, Cell.Green, Cell.Yellow, Cell.Purple])
+        raw = Shape.SHAPES[name][0]
+        matrix = [[Cell.Empty if raw[i][j] == 0 else color for j in range(len(raw[0]))] for i in range(len(raw))]
+        return Shape(matrix, x, y, color, name)
+
 
     

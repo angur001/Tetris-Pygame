@@ -62,6 +62,8 @@ while running:
                 game.tryMoveLeft()
             if event.key == pygame.K_RIGHT:
                 game.tryMoveRight()
+            if event.key == pygame.K_UP:
+                game.tryRotate()
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_DOWN]:

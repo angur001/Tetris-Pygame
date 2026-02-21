@@ -16,14 +16,14 @@ class GameState:
     def __init__(self):
         self.gameGrid = [[Cell.Empty for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)]
         self.score = 0
-        self.gameSpeed = 250 ## i will use this to control difficulty later
+        self.gameSpeed = 250
         self.addRandomShape()
 
     def getGameSpeed(self):
         return self.gameSpeed
         
     def addRandomShape(self):
-        newShape = Shape.generateRandomShape(Shape, self.WIDTH // 2, 0)
+        newShape = Shape.generateRandomShape(self.WIDTH // 2, 0)
         self.currentShape = newShape
         self.updateGameGrid()
 
@@ -74,7 +74,25 @@ class GameState:
                         return False
                     break
         return True
-                
+
+    def canRotate(self):
+        rotated_shape = self.currentShape.peekAtNextRotation()
+        curr = self.currentShape
+        for i in range(len(rotated_shape.matrix)):
+            for j in range(len(rotated_shape.matrix[0])):
+                if rotated_shape.matrix[i][j] == Cell.Empty:
+                    continue
+                gy, gx = rotated_shape.y + i, rotated_shape.x + j
+                if gy < 0 or gy >= self.HEIGHT or gx < 0 or gx >= self.WIDTH:
+                    return False
+                if self.gameGrid[gy][gx] == Cell.Empty:
+                    continue
+                ci, cj = gy - curr.y, gx - curr.x
+                if 0 <= ci < len(curr.matrix) and 0 <= cj < len(curr.matrix[0]) and curr.matrix[ci][cj] != Cell.Empty:
+                    continue
+                return False
+        return True
+
     def tryMoveLeft(self):
         if self.currentShape:
             if self.canMoveLeft():
@@ -87,5 +105,12 @@ class GameState:
             if self.canMoveRight():
                 self.removeShadow()
                 self.currentShape.x += 1
+                self.updateGameGrid()
+
+    def tryRotate(self):
+        if self.currentShape:
+            if self.canRotate():
+                self.removeShadow()
+                self.currentShape.rotate()
                 self.updateGameGrid()
     
