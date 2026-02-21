@@ -1,6 +1,10 @@
+from ast import Return
+from nt import isatty
+import pygame
 from cell import Cell
 from shape import Shape
-
+import time
+from displays import Displays
 
 class GameState:
 
@@ -23,23 +27,25 @@ class GameState:
         return self.gameSpeed
         
     def addRandomShape(self):
-        newShape = Shape.generateRandomShape(self.WIDTH // 2, 0)
+        newShape = Shape.generateRandomShape(Shape, self.WIDTH // 2 - 1, -4)
         self.currentShape = newShape
         self.updateGameGrid()
 
     def updateGameGrid(self):
         for i in range(len(self.currentShape.matrix)):
             for j in range(len(self.currentShape.matrix[0])):
-                if self.currentShape.matrix[i][j] != Cell.Empty:
+                if self.currentShape.matrix[i][j] != Cell.Empty and self.currentShape.y + i >= 0:
                     self.gameGrid[self.currentShape.y + i][self.currentShape.x + j] = self.currentShape.matrix[i][j]
 
     def removeShadow(self):
         for i in range(len(self.currentShape.matrix)):
             for j in range(len(self.currentShape.matrix[0])):
-                if self.currentShape.matrix[i][j] != Cell.Empty:
+                if self.currentShape.matrix[i][j] != Cell.Empty and self.currentShape.y + i >= 0:
                     self.gameGrid[self.currentShape.y + i][self.currentShape.x + j] = Cell.Empty
-
+    
     def step(self):
+        if self.gameOver():
+            return
         if self.currentShape:
             if self.canMoveDown():
                 self.removeShadow()
@@ -47,11 +53,28 @@ class GameState:
                 self.updateGameGrid()
             else:
                 self.addRandomShape()
+
+    def checkForLines(self):
+        lines_to_remove = []
+        for i in range(self.HEIGHT - 1, -1, -1):
+            if all(self.gameGrid[i][j] != Cell.Empty for j in range(self.WIDTH)):
+                lines_to_remove.append(i)
+
+        if len(lines_to_remove) > 0:
+            for i in range(len(self.gameGrid)):
+                if i == lines_to_remove[-1]:
+                    lines_to_remove.pop()
+                    continue
+                for j in range(self.WIDTH):
+                    self.gameGrid[i][j] = self.gameGrid[i + len(lines_to_remove)][j]
+
+
+
     
     def canMoveDown(self):
         for j in range(len(self.currentShape.matrix[0])):
             for i in range(len(self.currentShape.matrix) - 1, -1, -1):
-                if self.currentShape.matrix[i][j] != Cell.Empty:
+                if self.currentShape.matrix[i][j] != Cell.Empty and self.currentShape.y + i >= 0:
                     if self.currentShape.y + i + 1 >= self.HEIGHT or self.gameGrid[self.currentShape.y + i + 1][self.currentShape.x + j] != Cell.Empty:
                         return False
                     break
@@ -113,4 +136,15 @@ class GameState:
                 self.removeShadow()
                 self.currentShape.rotate()
                 self.updateGameGrid()
+    
+        return False
+   
+    def gameOver(self):
+        if not self.canMoveDown():
+            for i in range(len(self.currentShape.matrix)):
+                for j in range(len(self.currentShape.matrix[0])):
+                        if self.currentShape.matrix[i][j] != Cell.Empty and self.currentShape.y + i < 0:
+                            if self.gameGrid[self.currentShape.y + i][self.currentShape.x + j] != Cell.Empty:
+                                return True
+        return False
     
