@@ -207,4 +207,58 @@ class GameState:
 
     def addSoftDropScore(self):
         self.score += 1
-    
+
+    def clone(self):
+        new = GameState.__new__(GameState)
+        new.gameGrid = [[self.gameGrid[i][j] for j in range(self.WIDTH)] for i in range(self.HEIGHT)]
+        new.score = self.score
+        new.gameSpeed = self.gameSpeed
+        new.totalLinesCleared = self.totalLinesCleared
+        new.level = self.level
+
+        def _clone_shape(s):
+            if s is None:
+                return None
+            cloned = Shape(
+                [[s.matrix[r][c] for c in range(len(s.matrix[0]))] for r in range(len(s.matrix))],
+                s.x, s.y, s.color, s.name,
+            )
+            cloned.rotation_index = s.rotation_index
+            return cloned
+
+        new.currentShape = _clone_shape(self.currentShape)
+        new.nextShape = _clone_shape(getattr(self, "nextShape", None))
+        return new
+
+    def hard_drop(self):
+        if not self.currentShape:
+            return 0
+        self.removeShadow()
+        while self.canMoveDown():
+            self.currentShape.y += 1
+        self.updateGameGrid()
+        lines_before = self.totalLinesCleared
+        self.checkForLines()
+        return self.totalLinesCleared - lines_before
+
+    def get_board_features(self):
+        heights = [0] * self.WIDTH
+        for j in range(self.WIDTH):
+            for i in range(self.HEIGHT):
+                if self.gameGrid[i][j] != Cell.Empty:
+                    heights[j] = self.HEIGHT - i
+                    break
+
+        aggregate_height = sum(heights)
+
+        holes = 0
+        for j in range(self.WIDTH):
+            block_found = False
+            for i in range(self.HEIGHT):
+                if self.gameGrid[i][j] != Cell.Empty:
+                    block_found = True
+                elif block_found:
+                    holes += 1
+
+        bumpiness = sum(abs(heights[j] - heights[j + 1]) for j in range(self.WIDTH - 1))
+        return aggregate_height, holes, bumpiness
