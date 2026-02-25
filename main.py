@@ -45,7 +45,9 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_DOWN]:
         if current_time - last_soft_drop_time > SOFT_DROP_SPEED:
-            game.step()
+            result = game.step()
+            if result:
+                game.addSoftDropScore()
             last_soft_drop_time = current_time
 
 

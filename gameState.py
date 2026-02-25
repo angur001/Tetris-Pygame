@@ -62,15 +62,17 @@ class GameState:
     
     def step(self):
         if self.gameOver():
-            return
+            return False
         if self.currentShape:
             if self.canMoveDown():
                 self.removeShadow()
                 self.currentShape.y += 1
                 self.updateGameGrid()
+                return True
             else:
                 self.checkForLines()
                 self.addRandomShape()
+                return False
 
     def checkForLines(self):
         # Find all full lines in the grid
@@ -202,4 +204,7 @@ class GameState:
 
         if self.totalLinesCleared >= 10 * (self.level + 1):
             self.levelUp()
+
+    def addSoftDropScore(self):
+        self.score += 1
     
