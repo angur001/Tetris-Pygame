@@ -13,6 +13,8 @@ class GameState:
     gameSpeed: int
     currentShape: Shape
     nextShape: Shape
+    totalLinesCleared: int
+    level: int
 
     HEIGHT = 20
     WIDTH = 10
@@ -23,10 +25,16 @@ class GameState:
         self.score = 0
         self.gameSpeed = 250
         self.currentShape = None
+        self.totalLinesCleared = 0
+        self.level = 0
         self.addRandomShape()
 
     def getGameSpeed(self):
         return self.gameSpeed
+
+    def levelUp(self):
+        self.level += 1
+        self.gameSpeed -= 10
         
     def addRandomShape(self):
         if not self.currentShape:
@@ -44,8 +52,7 @@ class GameState:
             for j in range(len(self.currentShape.matrix[0])):
                 if self.currentShape.matrix[i][j] != Cell.Empty and self.currentShape.y + i >= 0:
                     self.gameGrid[self.currentShape.y + i][self.currentShape.x + j] = self.currentShape.matrix[i][j]
-        # check for lines and remove them
-        self.checkForLines()
+
 
     def removeShadow(self):
         for i in range(len(self.currentShape.matrix)):
@@ -62,6 +69,7 @@ class GameState:
                 self.currentShape.y += 1
                 self.updateGameGrid()
             else:
+                self.checkForLines()
                 self.addRandomShape()
 
     def checkForLines(self):
@@ -77,6 +85,7 @@ class GameState:
             return
 
         full_rows_set = set(full_rows)
+        self.addScore(len(full_rows))
 
         # Start from the bottom and move non-full rows down, effectively
         # sliding the blocks downward over the cleared lines.
@@ -175,4 +184,22 @@ class GameState:
                             if self.gameGrid[self.currentShape.y + i][self.currentShape.x + j] != Cell.Empty:
                                 return True
         return False
+
+    def addScore(self,lines_cleared):
+        
+        line_base_values = {
+            1: 40,
+            2: 100,
+            3: 300,
+            4: 1200
+        }
+
+        if lines_cleared in line_base_values:
+            points_gained = line_base_values[lines_cleared] * (self.level + 1)
+            self.score += points_gained
+            self.totalLinesCleared += lines_cleared
+
+
+        if self.totalLinesCleared >= 10 * (self.level + 1):
+            self.levelUp()
     

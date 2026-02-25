@@ -90,6 +90,17 @@ class Displays:
                         pygame.draw.rect(screen, cell_color, (cell_x, cell_y, preview_cell_size, preview_cell_size))
                         pygame.draw.rect(screen, (0, 0, 0), (cell_x, cell_y, preview_cell_size, preview_cell_size), 1)
 
+
+        hud_font = pygame.font.Font(None, 36)
+        if hasattr(game, "score"):
+            score_text = hud_font.render(f"Score: {game.score}", True, (0, 0, 0))
+            score_rect = score_text.get_rect(topleft=(10, 10))
+            screen.blit(score_text, score_rect)
+
+        if hasattr(game, "level"):
+            level_text = hud_font.render(f"Level: {game.level}", True, (0, 0, 0))
+            level_rect = level_text.get_rect(topright=(self.SCREEN_W - 20, 10))
+            screen.blit(level_text, level_rect)
    
     def DisplayGameOver(self, screen , score = 0):
             # Create a semi-transparent overlay
