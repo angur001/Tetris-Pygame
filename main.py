@@ -1,9 +1,22 @@
+import sys
+
 import pygame
 from gameState import GameState
 from displays import Displays
 
 pygame.init()
-displays = Displays()
+
+# Optional CLI argument: theme id in [1, 4]. If provided, lock the game to that theme.
+theme_id = None
+if len(sys.argv) >= 2:
+    try:
+        val = int(sys.argv[1])
+        if 1 <= val <= 4:
+            theme_id = val
+    except ValueError:
+        theme_id = None
+
+displays = Displays(theme_id=theme_id)
 game = GameState()
 screen = pygame.display.set_mode((Displays.SCREEN_W, Displays.SCREEN_H))
 pygame.display.set_caption("Tetris")
