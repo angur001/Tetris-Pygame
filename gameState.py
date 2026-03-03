@@ -241,24 +241,3 @@ class GameState:
         self.checkForLines()
         return self.totalLinesCleared - lines_before
 
-    def get_board_features(self):
-        heights = [0] * self.WIDTH
-        for j in range(self.WIDTH):
-            for i in range(self.HEIGHT):
-                if self.gameGrid[i][j] != Cell.Empty:
-                    heights[j] = self.HEIGHT - i
-                    break
-
-        aggregate_height = sum(heights)
-
-        holes = 0
-        for j in range(self.WIDTH):
-            block_found = False
-            for i in range(self.HEIGHT):
-                if self.gameGrid[i][j] != Cell.Empty:
-                    block_found = True
-                elif block_found:
-                    holes += 1
-
-        bumpiness = sum(abs(heights[j] - heights[j + 1]) for j in range(self.WIDTH - 1))
-        return aggregate_height, holes, bumpiness
